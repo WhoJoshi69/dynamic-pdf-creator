@@ -10,6 +10,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { PDFTemplate, PDFData, SlideData } from "./PDFTemplate";
 import {
@@ -19,8 +26,11 @@ import {
   Trash2,
   Upload,
   Image as ImageIcon,
+  Sparkles,
+  Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
+import { generateContent, ContentGenerationRequest } from "@/lib/groq";
 
 export const PDFForm = () => {
   const [formData, setFormData] = useState<PDFData>({
@@ -54,6 +64,15 @@ export const PDFForm = () => {
     ctaText2: "DM us to talk DevOps.",
     ctaText3: "Follow us for more tech insights.",
   });
+
+  // AI Content Generation State
+  const [aiRequest, setAiRequest] = useState<ContentGenerationRequest>({
+    topic: "",
+    slideCount: 3,
+    tone: "professional",
+    industry: "technology",
+  });
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const handleChange = (field: keyof PDFData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -114,6 +133,41 @@ export const PDFForm = () => {
 
   const handleGeneratePDF = () => {
     toast.success("PDF is ready to download!");
+  };
+
+  const handleAiGenerate = async () => {
+    if (!aiRequest.topic.trim()) {
+      toast.error("Please enter a topic for AI generation");
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      const generatedContent = await generateContent(aiRequest);
+      
+      // Update form data with generated content
+      setFormData(prev => ({
+        ...prev,
+        coverTitle: generatedContent.coverTitle,
+        coverSubtitle: generatedContent.coverSubtitle,
+        slides: generatedContent.slides.map((slide, index) => ({
+          pageNumber: String(index + 2).padStart(2, "0"),
+          heading: slide.heading,
+          description: slide.description,
+        })),
+        ctaHeading: generatedContent.ctaHeading,
+        ctaText1: generatedContent.ctaText1,
+        ctaText2: generatedContent.ctaText2,
+        ctaText3: generatedContent.ctaText3,
+      }));
+
+      toast.success("AI content generated successfully!");
+    } catch (error) {
+      console.error("AI generation error:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to generate content");
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   return (
@@ -189,6 +243,113 @@ export const PDFForm = () => {
                   onChange={(e) => handleChange("websiteUrl", e.target.value)}
                   placeholder="example.com"
                 />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* AI Content Generation */}
+          <Card className="border-2 border-purple-200 bg-gradient-to-r from-purple-50 to-blue-50">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-purple-600" />
+                <CardTitle className="text-purple-800">Use AI to Generate Content</CardTitle>
+              </div>
+              <CardDescription>
+                Let AI create engaging presentation content based on your topic
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="aiTopic">Topic</Label>
+                  <Input
+                    id="aiTopic"
+                    value={aiRequest.topic}
+                    onChange={(e) => setAiRequest(prev => ({ ...prev, topic: e.target.value }))}
+                    placeholder="e.g., AI in Healthcare, Digital Marketing Trends"
+                    disabled={isGenerating}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="aiIndustry">Industry</Label>
+                  <Select
+                    value={aiRequest.industry}
+                    onValueChange={(value) => setAiRequest(prev => ({ ...prev, industry: value }))}
+                    disabled={isGenerating}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select industry" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="technology">Technology</SelectItem>
+                      <SelectItem value="healthcare">Healthcare</SelectItem>
+                      <SelectItem value="finance">Finance</SelectItem>
+                      <SelectItem value="education">Education</SelectItem>
+                      <SelectItem value="marketing">Marketing</SelectItem>
+                      <SelectItem value="consulting">Consulting</SelectItem>
+                      <SelectItem value="retail">Retail</SelectItem>
+                      <SelectItem value="manufacturing">Manufacturing</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="aiTone">Tone</Label>
+                  <Select
+                    value={aiRequest.tone}
+                    onValueChange={(value: any) => setAiRequest(prev => ({ ...prev, tone: value }))}
+                    disabled={isGenerating}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select tone" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="professional">Professional</SelectItem>
+                      <SelectItem value="casual">Casual</SelectItem>
+                      <SelectItem value="technical">Technical</SelectItem>
+                      <SelectItem value="marketing">Marketing</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="aiSlideCount">Number of Slides</Label>
+                  <Select
+                    value={String(aiRequest.slideCount)}
+                    onValueChange={(value) => setAiRequest(prev => ({ ...prev, slideCount: parseInt(value) }))}
+                    disabled={isGenerating}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select slide count" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="2">2 Slides</SelectItem>
+                      <SelectItem value="3">3 Slides</SelectItem>
+                      <SelectItem value="4">4 Slides</SelectItem>
+                      <SelectItem value="5">5 Slides</SelectItem>
+                      <SelectItem value="6">6 Slides</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="flex justify-center pt-2">
+                <Button
+                  onClick={handleAiGenerate}
+                  disabled={isGenerating || !aiRequest.topic.trim()}
+                  className="gap-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Generating Content...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4" />
+                      Generate with AI
+                    </>
+                  )}
+                </Button>
               </div>
             </CardContent>
           </Card>
