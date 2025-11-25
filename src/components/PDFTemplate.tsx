@@ -4,15 +4,8 @@ import {
   Text,
   View,
   StyleSheet,
-  Font,
   Image,
 } from "@react-pdf/renderer";
-
-// Register Boldonse-Regular font from local file
-Font.register({
-  family: "Boldonse",
-  src: "/src/Boldonse-Regular.ttf",
-});
 
 const styles = StyleSheet.create({
   page: {
@@ -70,12 +63,12 @@ const styles = StyleSheet.create({
   },
   coverTitle: {
     fontSize: 36,
-    fontWeight: 400,
+    fontWeight: 700,
     color: "#FFFFFF",
     textAlign: "center",
     lineHeight: 1.2,
     textTransform: "uppercase",
-    fontFamily: "Boldonse",
+    fontFamily: "Helvetica-Bold",
     marginBottom: 20,
     paddingHorizontal: 40,
     letterSpacing: 1,
