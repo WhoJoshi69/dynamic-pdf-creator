@@ -1,121 +1,187 @@
-import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
 
-// Register fonts
-Font.register({
-  family: 'Inter',
-  fonts: [
-    { src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2', fontWeight: 400 },
-    { src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2', fontWeight: 600 },
-    { src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYAZ9hiA.woff2', fontWeight: 700 },
-    { src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuI6fAZ9hiA.woff2', fontWeight: 800 },
-  ]
-});
+// Use system fonts for reliability - Helvetica is similar to Montserrat and works well
+// No custom font registration needed, using built-in fonts
 
 const styles = StyleSheet.create({
   page: {
-    backgroundColor: '#FFFFFF',
-    fontFamily: 'Inter',
+    backgroundColor: '#020024',
+    fontFamily: 'Helvetica',
     padding: 0,
     position: 'relative',
   },
-  brandingTop: {
+  // Cover page styles matching the design
+  coverPage: {
+    backgroundColor: '#020024',
+    fontFamily: 'Helvetica',
+    padding: 0,
+    position: 'relative',
+  },
+  coverHeader: {
     position: 'absolute',
     top: 40,
     left: 40,
+    right: 40,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  companyLogo: {
+    maxWidth: 200,
+    maxHeight: 80,
+    objectFit: 'contain',
+  },
+  pageNumberBadge: {
+    backgroundColor: '#7C3AED',
+    borderRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+  },
+  pageNumberText: {
+    color: '#FFFFFF',
     fontSize: 18,
     fontWeight: 700,
-    color: '#000000',
+    fontFamily: 'Helvetica-Bold',
   },
-  pageNumberContainer: {
+  coverCenterContent: {
     position: 'absolute',
-    top: 80,
-    left: 40,
-    width: 100,
+    top: '50%',
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    transform: 'translateY(-50%)',
   },
-  pageNumber: {
-    fontSize: 120,
+  centerImage: {
+    maxWidth: 400,
+    maxHeight: 150,
+    objectFit: 'contain',
+    marginBottom: 40,
+  },
+  coverTitle: {
+    fontSize: 42,
     fontWeight: 800,
-    color: '#E5E7EB',
-    lineHeight: 1,
+    color: '#FFFFFF',
+    textAlign: 'center',
+    lineHeight: 1.2,
+    textTransform: 'uppercase',
+    fontFamily: 'Helvetica-Bold',
+    marginBottom: 10,
+    paddingHorizontal: 40,
+  },
+  coverTitlePurple: {
+    color: '#7C3AED',
+  },
+  coverSubtitle: {
+    fontSize: 42,
+    fontWeight: 800,
+    color: '#FFFFFF',
+    textAlign: 'center',
+    lineHeight: 1.2,
+    textTransform: 'uppercase',
+    fontFamily: 'Helvetica-Bold',
+    paddingHorizontal: 40,
+  },
+  coverFooter: {
+    position: 'absolute',
+    bottom: 40,
+    left: 40,
+    right: 40,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  websiteText: {
+    fontSize: 16,
+    color: '#FFFFFF',
+    fontFamily: 'Helvetica',
+    fontWeight: 400,
+  },
+  arrowIcon: {
+    width: 40,
+    height: 20,
+    backgroundColor: '#7C3AED',
+  },
+  // Content slide styles
+  slideHeader: {
+    position: 'absolute',
+    top: 40,
+    left: 40,
+    right: 40,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  brandingText: {
+    fontSize: 18,
+    fontWeight: 700,
+    color: '#FFFFFF',
+    fontFamily: 'Helvetica-Bold',
+  },
+  slideCompanyLogo: {
+    maxWidth: 200,
+    maxHeight: 80,
+    objectFit: 'contain',
   },
   contentContainer: {
-    marginTop: 250,
-    marginLeft: 180,
-    marginRight: 60,
-    maxWidth: 380,
+    marginTop: 200,
+    paddingHorizontal: 40,
+    alignItems: 'center',
   },
   heading: {
     fontSize: 36,
     fontWeight: 800,
-    color: '#000000',
+    color: '#FFFFFF',
     marginBottom: 24,
     lineHeight: 1.2,
     textTransform: 'uppercase',
+    fontFamily: 'Helvetica-Bold',
+    textAlign: 'center',
   },
   description: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 400,
-    color: '#374151',
+    color: '#E5E7EB',
     lineHeight: 1.6,
+    fontFamily: 'Helvetica',
+    textAlign: 'center',
+    maxWidth: 500,
   },
-  footer: {
+  slideFooter: {
     position: 'absolute',
     bottom: 40,
-    right: 60,
-    fontSize: 12,
-    color: '#6B7280',
-    fontWeight: 400,
-  },
-  coverPage: {
-    backgroundColor: '#FFFFFF',
-    padding: 60,
-    flexDirection: 'column',
-    justifyContent: 'center',
+    left: 40,
+    right: 40,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
-  coverTitle: {
-    fontSize: 48,
-    fontWeight: 800,
-    color: '#000000',
-    marginBottom: 20,
-    textAlign: 'center',
-    lineHeight: 1.2,
-    textTransform: 'uppercase',
-  },
-  coverSubtitle: {
-    fontSize: 24,
-    fontWeight: 600,
-    color: '#6B7280',
-    textAlign: 'center',
-    lineHeight: 1.4,
-    textTransform: 'uppercase',
-  },
-  coverFooter: {
-    position: 'absolute',
-    bottom: 60,
-    fontSize: 14,
-    color: '#6B7280',
-  },
+  // CTA page styles
   ctaPage: {
-    backgroundColor: '#FFFFFF',
-    padding: 60,
-    flexDirection: 'column',
-    justifyContent: 'center',
+    backgroundColor: '#020024',
+    fontFamily: 'Helvetica',
+    padding: 0,
+    position: 'relative',
+  },
+  ctaContent: {
+    marginTop: 200,
+    paddingHorizontal: 60,
   },
   ctaHeading: {
     fontSize: 42,
     fontWeight: 800,
-    color: '#000000',
+    color: '#FFFFFF',
     marginBottom: 40,
     lineHeight: 1.2,
     textTransform: 'uppercase',
+    fontFamily: 'Helvetica-Bold',
   },
   ctaText: {
     fontSize: 18,
     fontWeight: 400,
-    color: '#374151',
+    color: '#E5E7EB',
     marginBottom: 12,
     lineHeight: 1.6,
+    fontFamily: 'Helvetica',
   },
 });
 
@@ -135,6 +201,8 @@ export interface PDFData {
   ctaText1: string;
   ctaText2: string;
   ctaText3: string;
+  centerImage?: string; // Optional center image for cover page
+  companyLogo?: string; // Optional company logo
 }
 
 interface PDFTemplateProps {
@@ -145,34 +213,97 @@ export const PDFTemplate = ({ data }: PDFTemplateProps) => (
   <Document>
     {/* Cover Page */}
     <Page size="A4" style={styles.coverPage}>
-      <Text style={styles.coverTitle}>{data.coverTitle}</Text>
-      <Text style={styles.coverSubtitle}>{data.coverSubtitle}</Text>
-      <Text style={styles.coverFooter}>{data.websiteUrl}</Text>
+      {/* Header with logo and page number */}
+      <View style={styles.coverHeader}>
+        {data.companyLogo ? (
+          <Image src={data.companyLogo} style={styles.companyLogo} />
+        ) : (
+          <Text style={styles.brandingText}>{data.branding}</Text>
+        )}
+        <View style={styles.pageNumberBadge}>
+          <Text style={styles.pageNumberText}>01</Text>
+        </View>
+      </View>
+
+      {/* Center content */}
+      <View style={styles.coverCenterContent}>
+        {data.centerImage && (
+          <Image src={data.centerImage} style={styles.centerImage} />
+        )}
+        <Text style={styles.coverTitle}>
+          {data.coverTitle.split(' ').map((word, index) => {
+            // Highlight specific words in purple (you can customize this logic)
+            const purpleWords = ['HOW', '99.99%'];
+            return purpleWords.includes(word) ? (
+              <Text key={index} style={styles.coverTitlePurple}>{word} </Text>
+            ) : (
+              <Text key={index}>{word} </Text>
+            );
+          })}
+        </Text>
+        <Text style={styles.coverSubtitle}>{data.coverSubtitle}</Text>
+      </View>
+
+      {/* Footer */}
+      <View style={styles.coverFooter}>
+        <Text style={styles.websiteText}>{data.websiteUrl}</Text>
+        <View style={styles.arrowIcon} />
+      </View>
     </Page>
 
     {/* Content Slides */}
     {data.slides.map((slide, index) => (
       <Page key={index} size="A4" style={styles.page}>
-        <Text style={styles.brandingTop}>{data.branding}</Text>
-        <View style={styles.pageNumberContainer}>
-          <Text style={styles.pageNumber}>{slide.pageNumber}</Text>
+        {/* Header with company logo on left */}
+        <View style={styles.slideHeader}>
+          {data.companyLogo ? (
+            <Image src={data.companyLogo} style={styles.slideCompanyLogo} />
+          ) : (
+            <Text style={styles.brandingText}>{data.branding}</Text>
+          )}
+          <View style={styles.pageNumberBadge}>
+            <Text style={styles.pageNumberText}>{slide.pageNumber}</Text>
+          </View>
         </View>
+
+        {/* Content */}
         <View style={styles.contentContainer}>
           <Text style={styles.heading}>{slide.heading}</Text>
           <Text style={styles.description}>{slide.description}</Text>
         </View>
-        <Text style={styles.footer}>{data.websiteUrl}</Text>
+
+        {/* Footer */}
+        <View style={styles.slideFooter}>
+          <Text style={styles.websiteText}>{data.websiteUrl}</Text>
+          <View style={styles.arrowIcon} />
+        </View>
       </Page>
     ))}
 
     {/* CTA/Final Page */}
     <Page size="A4" style={styles.ctaPage}>
-      <Text style={styles.brandingTop}>{data.branding}</Text>
-      <Text style={styles.ctaHeading}>{data.ctaHeading}</Text>
-      <Text style={styles.ctaText}>{data.ctaText1}</Text>
-      <Text style={styles.ctaText}>{data.ctaText2}</Text>
-      <Text style={styles.ctaText}>{data.ctaText3}</Text>
-      <Text style={styles.footer}>{data.websiteUrl}</Text>
+      {/* Header */}
+      <View style={styles.slideHeader}>
+        {data.companyLogo ? (
+          <Image src={data.companyLogo} style={styles.slideCompanyLogo} />
+        ) : (
+          <Text style={styles.brandingText}>{data.branding}</Text>
+        )}
+      </View>
+
+      {/* Content */}
+      <View style={styles.ctaContent}>
+        <Text style={styles.ctaHeading}>{data.ctaHeading}</Text>
+        <Text style={styles.ctaText}>{data.ctaText1}</Text>
+        <Text style={styles.ctaText}>{data.ctaText2}</Text>
+        <Text style={styles.ctaText}>{data.ctaText3}</Text>
+      </View>
+
+      {/* Footer */}
+      <View style={styles.slideFooter}>
+        <Text style={styles.websiteText}>{data.websiteUrl}</Text>
+        <View style={styles.arrowIcon} />
+      </View>
     </Page>
   </Document>
 );
