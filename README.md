@@ -7,7 +7,7 @@ A modern React application that generates beautiful presentation-style PDFs with
 - 🤖 **AI Content Generation**: Use Groq AI to automatically generate presentation content based on your topic
 - 📄 **PDF Generation**: Create professional presentation-style PDFs with custom branding
 - 🎨 **Customizable Design**: Upload logos, customize colors, and personalize content
-- 📱 **Responsive UI**: Modern, mobile-friendly interface built with shadcn/ui
+- 📱 **Responsive UI**: Modern, mobile-friendly interface built with shadcn/uis
 - ⚡ **Fast Performance**: Built with Vite and optimized for speed
 
 ## Setup Instructions
