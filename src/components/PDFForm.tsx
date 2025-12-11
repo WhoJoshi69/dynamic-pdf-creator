@@ -178,7 +178,7 @@ export const PDFForm = () => {
             <FileText className="w-8 h-8 text-primary" />
           </div>
           <h1 className="text-4xl font-bold mb-2 text-foreground">
-            WhoJoshi content maker
+            Bytespark content maker
           </h1>
           <p className="text-muted-foreground text-lg">
             Create beautiful presentation-style PDFs
@@ -596,7 +596,7 @@ export const PDFForm = () => {
           <div className="flex justify-center pt-4">
             <PDFDownloadLink
               document={<PDFTemplate data={formData} />}
-              fileName={`${formData.branding}-presentation.pdf`}
+              fileName={`${formData.coverTitle}.pdf`}
               onClick={handleGeneratePDF}
             >
               {({ loading }) => (

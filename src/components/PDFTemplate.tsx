@@ -5,19 +5,37 @@ import {
   View,
   StyleSheet,
   Image,
+  Font,
+  Svg,
+  Path,
 } from "@react-pdf/renderer";
+
+// Register Outfit font for react-pdf
+Font.register({
+  family: "Outfit",
+  fonts: [
+    {
+      src: "/Outfit-VariableFont_wght.ttf",
+      fontWeight: 400,
+    },
+    {
+      src: "/Outfit-VariableFont_wght.ttf",
+      fontWeight: 700,
+    },
+  ],
+});
 
 const styles = StyleSheet.create({
   page: {
     backgroundColor: "#020024",
-    fontFamily: "Helvetica",
+    fontFamily: "Outfit",
     padding: 0,
     position: "relative",
   },
   // Cover page styles matching the design
   coverPage: {
     backgroundColor: "#020024",
-    fontFamily: "Helvetica",
+    fontFamily: "Outfit",
     padding: 0,
     position: "relative",
   },
@@ -45,7 +63,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 18,
     fontWeight: 700,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "Outfit",
   },
   coverCenterContent: {
     position: "absolute",
@@ -62,19 +80,16 @@ const styles = StyleSheet.create({
     marginBottom: 50,
   },
   coverTitle: {
-    fontSize: 36,
+    fontSize: 32,
     fontWeight: 700,
     color: "#FFFFFF",
     textAlign: "center",
     lineHeight: 1.2,
     textTransform: "uppercase",
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "Outfit",
     marginBottom: 20,
     paddingHorizontal: 40,
     letterSpacing: 1,
-  },
-  coverTitlePurple: {
-    color: "#7C3AED",
   },
   coverSubtitle: {
     fontSize: 10,
@@ -83,7 +98,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     lineHeight: 0.95,
     textTransform: "uppercase",
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "Outfit",
     paddingHorizontal: 40,
     letterSpacing: 3,
   },
@@ -99,13 +114,12 @@ const styles = StyleSheet.create({
   websiteText: {
     fontSize: 16,
     color: "#FFFFFF",
-    fontFamily: "Helvetica",
+    fontFamily: "Outfit",
     fontWeight: 400,
   },
-  arrowIcon: {
-    width: 40,
-    height: 20,
-    backgroundColor: "#7C3AED",
+  arrowContainer: {
+    width: 32,
+    height: 24,
   },
   // Content slide styles
   slideHeader: {
@@ -121,7 +135,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 700,
     color: "#FFFFFF",
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "Outfit",
   },
   slideCompanyLogo: {
     maxWidth: 200,
@@ -135,12 +149,12 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   heading: {
-    fontSize: 48,
+    fontSize: 36,
     fontWeight: 700,
     color: "#FFFFFF",
     marginBottom: 40,
     lineHeight: 1.1,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "Outfit",
     textAlign: "left",
     letterSpacing: 0,
   },
@@ -149,7 +163,7 @@ const styles = StyleSheet.create({
     fontWeight: 400,
     color: "#E5E7EB",
     lineHeight: 1.5,
-    fontFamily: "Helvetica",
+    fontFamily: "Outfit",
     textAlign: "left",
     maxWidth: 480,
   },
@@ -165,7 +179,7 @@ const styles = StyleSheet.create({
   // CTA page styles
   ctaPage: {
     backgroundColor: "#020024",
-    fontFamily: "Helvetica",
+    fontFamily: "Outfit",
     padding: 0,
     position: "relative",
   },
@@ -181,7 +195,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     marginBottom: 40,
     lineHeight: 1.1,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "Outfit",
     textAlign: "left",
     letterSpacing: 0,
   },
@@ -191,11 +205,27 @@ const styles = StyleSheet.create({
     color: "#E5E7EB",
     marginBottom: 16,
     lineHeight: 1.5,
-    fontFamily: "Helvetica",
+    fontFamily: "Outfit",
     textAlign: "left",
     maxWidth: 480,
   },
 });
+
+// Arrow Icon Component
+const ArrowIcon = () => (
+  <View style={styles.arrowContainer}>
+    <Svg width="36" height="24" viewBox="0 0 36 24">
+      <Path
+        d="M2 12h30M28 5l7 7-7 7"
+        stroke="#7C3AED"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+    </Svg>
+  </View>
+);
 
 export interface SlideData {
   pageNumber: string;
@@ -247,7 +277,7 @@ export const PDFTemplate = ({ data }: PDFTemplateProps) => (
             // Highlight specific words in purple (you can customize this logic)
             const purpleWords = ["HOW", "99.99%"];
             return purpleWords.includes(word) ? (
-              <Text key={index} style={styles.coverTitlePurple}>
+              <Text key={index}>
                 {word}{" "}
               </Text>
             ) : (
@@ -261,7 +291,7 @@ export const PDFTemplate = ({ data }: PDFTemplateProps) => (
       {/* Footer */}
       <View style={styles.coverFooter}>
         <Text style={styles.websiteText}>{data.websiteUrl}</Text>
-        <View style={styles.arrowIcon} />
+        <ArrowIcon />
       </View>
     </Page>
 
@@ -289,7 +319,7 @@ export const PDFTemplate = ({ data }: PDFTemplateProps) => (
         {/* Footer */}
         <View style={styles.slideFooter}>
           <Text style={styles.websiteText}>{data.websiteUrl}</Text>
-          <View style={styles.arrowIcon} />
+          <ArrowIcon />
         </View>
       </Page>
     ))}
@@ -316,7 +346,7 @@ export const PDFTemplate = ({ data }: PDFTemplateProps) => (
       {/* Footer */}
       <View style={styles.slideFooter}>
         <Text style={styles.websiteText}>{data.websiteUrl}</Text>
-        <View style={styles.arrowIcon} />
+        <ArrowIcon />
       </View>
     </Page>
   </Document>

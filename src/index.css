@@ -7,6 +7,20 @@ All colors MUST be HSL.
 */
 
 @layer base {
+  @font-face {
+    font-family: "Outfit";
+    src: url("/Outfit-VariableFont_wght.ttf") format("truetype");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  * {
+    font-family: "Outfit", sans-serif;
+  }
+}
+
+@layer base {
   :root {
     --background: 210 20% 98%;
     --foreground: 220 15% 20%;
