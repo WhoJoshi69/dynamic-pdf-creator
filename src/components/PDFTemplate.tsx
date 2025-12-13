@@ -26,15 +26,23 @@ Font.register({
 });
 
 const styles = StyleSheet.create({
+  // Dark variant 1 for content slides (deep navy)
   page: {
     backgroundColor: "#020024",
     fontFamily: "Outfit",
     padding: 0,
     position: "relative",
   },
-  // Cover page styles matching the design
+  // Dark variant 2 for alternating content slides (deep purple-black)
+  pageAlt: {
+    backgroundColor: "#0d0620",
+    fontFamily: "Outfit",
+    padding: 0,
+    position: "relative",
+  },
+  // Cover page - lighter purple tone for contrast with logo
   coverPage: {
-    backgroundColor: "#020024",
+    backgroundColor: "#1a0a3e",
     fontFamily: "Outfit",
     padding: 0,
     position: "relative",
@@ -67,7 +75,7 @@ const styles = StyleSheet.create({
   },
   coverCenterContent: {
     position: "absolute",
-    top: "40%",
+    top: "28%",
     left: 0,
     right: 0,
     alignItems: "center",
@@ -77,15 +85,15 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     maxHeight: 200,
     objectFit: "contain",
-    marginBottom: 50,
+    marginBottom: 30,
   },
   coverTitle: {
-    fontSize: 32,
+    fontSize: 30,
     fontWeight: 700,
     color: "#FFFFFF",
     textAlign: "center",
     lineHeight: 1.2,
-    textTransform: "uppercase",
+    // textTransform: "uppercase",
     fontFamily: "Outfit",
     marginBottom: 20,
     paddingHorizontal: 40,
@@ -96,7 +104,7 @@ const styles = StyleSheet.create({
     fontWeight: 700,
     color: "#FFFFFF",
     textAlign: "center",
-    lineHeight: 0.95,
+    lineHeight: 1.4,
     textTransform: "uppercase",
     fontFamily: "Outfit",
     paddingHorizontal: 40,
@@ -150,7 +158,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 36,
-    fontWeight: 700,
+    fontWeight: 800,
     color: "#FFFFFF",
     marginBottom: 40,
     lineHeight: 1.1,
@@ -160,11 +168,11 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 20,
-    fontWeight: 400,
+    fontWeight: 700,
     color: "#E5E7EB",
     lineHeight: 1.5,
     fontFamily: "Outfit",
-    textAlign: "left",
+    textAlign: "justify",
     maxWidth: 480,
   },
   slideFooter: {
@@ -176,9 +184,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  // CTA page styles
+  // CTA page styles - lighter purple tone (same as cover for consistency)
   ctaPage: {
-    backgroundColor: "#020024",
+    backgroundColor: "#1a0a3e",
     fontFamily: "Outfit",
     padding: 0,
     position: "relative",
@@ -201,12 +209,12 @@ const styles = StyleSheet.create({
   },
   ctaText: {
     fontSize: 20,
-    fontWeight: 400,
+    fontWeight: 700,
     color: "#E5E7EB",
     marginBottom: 16,
     lineHeight: 1.5,
     fontFamily: "Outfit",
-    textAlign: "left",
+    textAlign: "justify",
     maxWidth: 480,
   },
 });
@@ -295,9 +303,9 @@ export const PDFTemplate = ({ data }: PDFTemplateProps) => (
       </View>
     </Page>
 
-    {/* Content Slides */}
+    {/* Content Slides - alternating between two dark variants */}
     {data.slides.map((slide, index) => (
-      <Page key={index} size="A4" style={styles.page}>
+      <Page key={index} size="A4" style={index % 2 === 0 ? styles.page : styles.pageAlt}>
         {/* Header with company logo on left */}
         <View style={styles.slideHeader}>
           {data.companyLogo ? (
